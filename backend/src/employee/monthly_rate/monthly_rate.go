@@ -23,3 +23,7 @@ func (e Employee) todayIsMonthAfterLastSalaryDate(today time.Time) bool {
 
 	return today.Equal(monthAfterLastSalaryDate) || today.After(monthAfterLastSalaryDate)
 }
+
+func (e Employee) CalculatePayment(_ int) models.Payment {
+	return models.Payment(e.data.Rate)
+}

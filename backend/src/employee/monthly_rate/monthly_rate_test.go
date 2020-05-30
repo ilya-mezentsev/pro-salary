@@ -28,3 +28,10 @@ func TestEmployee_IsPayDayAfterMonth(t *testing.T) {
 
 	utils.AssertTrue(e.IsPayDay(utils.GetAfterOneMonth(testDate)), t)
 }
+
+func TestEmployee_CalculatePayment(t *testing.T) {
+	employeeData := models.Employee{Rate: 50000}
+	e := New(employeeData)
+
+	utils.AssertEqual(models.Payment(employeeData.Rate), e.CalculatePayment(0), t)
+}

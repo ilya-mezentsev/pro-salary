@@ -12,7 +12,7 @@ cd src/ || exit
 
 for dir in $(ls)
 do
-  if [[ ${dir} != github.com ]]; then
+  if [[ ${dir} != github.com && ${dir} != golang.org ]]; then
     cd "${dir}" || exit
     (( linesCount=linesCount+$(find . -name '*.go' -type f -print0 | xargs -0 cat | wc -l) ))
     cd ../

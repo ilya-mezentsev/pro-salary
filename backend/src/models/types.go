@@ -5,5 +5,6 @@ type (
 	Name     string
 	PayType  string
 	RateType string
-	Rate     int64
+	Rate     float64
+	Payment  float64
 )
