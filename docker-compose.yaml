@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    restart: always
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      TZ: Europe/Moscow
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
+  api:
+    build:
+      context: backend
+      args:
+        API_SRC: ${CONTAINER_API_SRC}
+    environment:
+      API_PORT: ${API_PORT}
+      GOPATH: ${CONTAINER_API_SRC}
+      CODER_KEY: ${CODER_KEY}
+      CSRF_PRIVATE_KEY: ${CSRF_PRIVATE_KEY}
+      CONN_STR: "host=db port=5432 user=${DB_USER} password=${DB_PASSWORD} dbname=${DB_NAME} sslmode=disable"
+    command: /bin/sh -c "$RUN_GO_COMMAND"
+    ports:
+      - ${API_PORT}:8080
+    depends_on:
+      - db

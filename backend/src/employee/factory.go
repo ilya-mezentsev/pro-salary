@@ -1,15 +1,11 @@
 package employee
 
 import (
+	"config"
 	"employee/hourly_rate"
 	"employee/monthly_rate"
 	"interfaces"
 	"models"
-)
-
-const (
-	hourlyRate  = "hourly"
-	monthlyRate = "monthly"
 )
 
 type Factory struct {
@@ -39,9 +35,9 @@ func (f Factory) GetAll() ([]interfaces.Employee, error) {
 }
 
 func (f Factory) isEmployeeWithHourlyRate(data models.Employee) bool {
-	return data.RateType == hourlyRate
+	return data.RateType == config.GetHourlyRateName()
 }
 
 func (f Factory) isEmployeeWithMonthlyRate(data models.Employee) bool {
-	return data.RateType == monthlyRate
+	return data.RateType == config.GetMonthlyRateName()
 }
