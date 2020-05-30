@@ -7,23 +7,25 @@ import (
 )
 
 type Employee struct {
-	data models.Employee
+	data   models.Employee
+	salary salary
 }
 
 func New(data models.Employee) interfaces.Employee {
-	return Employee{data}
+	return Employee{
+		data:   data,
+		salary: salary{data},
+	}
 }
 
 func (e Employee) IsPayDay(today time.Time) bool {
-	return e.todayIsMonthAfterLastSalaryDate(today)
-}
-
-func (e Employee) todayIsMonthAfterLastSalaryDate(today time.Time) bool {
-	monthAfterLastSalaryDate := e.data.LastPayDate.AddDate(0, 1, 0)
-
-	return today.Equal(monthAfterLastSalaryDate) || today.After(monthAfterLastSalaryDate)
+	return e.salary.isPayDay(today)
 }
 
 func (e Employee) CalculatePayment(_ int) models.Payment {
 	return models.Payment(e.data.Rate)
+}
+
+func (e Employee) GetPaymentType() models.PayType {
+	return e.data.PayType
 }

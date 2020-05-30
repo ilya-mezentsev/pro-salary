@@ -35,3 +35,10 @@ func TestEmployee_CalculatePayment(t *testing.T) {
 
 	utils.AssertEqual(models.Payment(employeeData.Rate), e.CalculatePayment(0), t)
 }
+
+func TestEmployee_GetPaymentType(t *testing.T) {
+	employeeData := models.Employee{PayType: "test"}
+	e := New(employeeData)
+
+	utils.AssertEqual(employeeData.PayType, e.GetPaymentType(), t)
+}

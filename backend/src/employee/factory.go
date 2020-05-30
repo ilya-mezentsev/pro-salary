@@ -12,7 +12,7 @@ type Factory struct {
 	repository interfaces.EmployeesRepository
 }
 
-func New(repository interfaces.EmployeesRepository) Factory {
+func New(repository interfaces.EmployeesRepository) interfaces.EmployeesFactory {
 	return Factory{repository}
 }
 

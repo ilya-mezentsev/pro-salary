@@ -6,35 +6,28 @@ import (
 	"time"
 )
 
-const (
-	weekWorkHours         = 40
-	extraHoursCoefficient = 1.5
-)
-
 type Employee struct {
-	data models.Employee
+	data    models.Employee
+	salary  salary
+	payment payment
 }
 
 func New(data models.Employee) interfaces.Employee {
-	return Employee{data}
+	return Employee{
+		data:    data,
+		salary:  salary{data},
+		payment: payment{data},
+	}
 }
 
 func (e Employee) IsPayDay(today time.Time) bool {
-	return e.todayIsWeekAfterLastSalaryDate(today)
-}
-
-func (e Employee) todayIsWeekAfterLastSalaryDate(today time.Time) bool {
-	weekAfterLastSalaryDate := e.data.LastPayDate.AddDate(0, 0, 7)
-
-	return today.Equal(weekAfterLastSalaryDate) || today.After(weekAfterLastSalaryDate)
+	return e.salary.isPayDay(today)
 }
 
 func (e Employee) CalculatePayment(workedHours int) models.Payment {
-	if workedHours > weekWorkHours {
-		return models.Payment(
-			e.data.Rate*weekWorkHours +
-				e.data.Rate*models.Rate(extraHoursCoefficient)*models.Rate(workedHours%weekWorkHours))
-	} else {
-		return models.Payment(e.data.Rate * models.Rate(workedHours))
-	}
+	return e.payment.calculate(workedHours)
+}
+
+func (e Employee) GetPaymentType() models.PayType {
+	return e.data.PayType
 }
