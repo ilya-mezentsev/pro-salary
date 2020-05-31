@@ -24,9 +24,9 @@ func (f Factory) GetAll() ([]interfaces.Employee, error) {
 	}
 
 	for _, employeeData := range employeesData {
-		if f.isEmployeeWithHourlyRate(employeeData) {
+		if f.isHourlyRate(employeeData) {
 			employees = append(employees, hourly_rate.New(employeeData))
-		} else if f.isEmployeeWithMonthlyRate(employeeData) {
+		} else if f.isMonthlyRate(employeeData) {
 			employees = append(employees, monthly_rate.New(employeeData))
 		}
 	}
@@ -34,10 +34,10 @@ func (f Factory) GetAll() ([]interfaces.Employee, error) {
 	return employees, nil
 }
 
-func (f Factory) isEmployeeWithHourlyRate(data models.Employee) bool {
+func (f Factory) isHourlyRate(data models.Employee) bool {
 	return data.RateType == config.GetHourlyRateName()
 }
 
-func (f Factory) isEmployeeWithMonthlyRate(data models.Employee) bool {
+func (f Factory) isMonthlyRate(data models.Employee) bool {
 	return data.RateType == config.GetMonthlyRateName()
 }

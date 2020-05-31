@@ -8,7 +8,7 @@ import (
 type (
 	Employee interface {
 		IsPayDay(today time.Time) bool
-		CalculatePayment(workedHours int) models.Payment
+		CalculatePayment() models.Payment
 		GetPaymentType() models.PayType
 	}
 

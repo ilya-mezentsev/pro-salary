@@ -9,11 +9,16 @@ type payment struct {
 }
 
 func (p payment) calculate(workedHours int) models.Payment {
-	if workedHours > weekWorkHours {
-		return models.Payment(
-			p.data.Rate*weekWorkHours +
-				p.data.Rate*models.Rate(extraHoursCoefficient)*models.Rate(workedHours%weekWorkHours))
-	} else {
-		return models.Payment(p.data.Rate * models.Rate(workedHours))
+	payment := models.Payment{
+		UserId: p.data.Id,
 	}
+
+	if workedHours > weekWorkHours {
+		payment.Amount = models.PaymentAmount(p.data.Rate*weekWorkHours +
+			p.data.Rate*models.Rate(extraHoursCoefficient)*models.Rate(workedHours%weekWorkHours))
+	} else {
+		payment.Amount = models.PaymentAmount(p.data.Rate * models.Rate(workedHours))
+	}
+
+	return payment
 }

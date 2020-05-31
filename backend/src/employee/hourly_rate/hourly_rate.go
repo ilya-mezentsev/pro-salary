@@ -24,8 +24,8 @@ func (e Employee) IsPayDay(today time.Time) bool {
 	return e.salary.isPayDay(today)
 }
 
-func (e Employee) CalculatePayment(workedHours int) models.Payment {
-	return e.payment.calculate(workedHours)
+func (e Employee) CalculatePayment() models.Payment {
+	return e.payment.calculate(e.data.UnpaidHours)
 }
 
 func (e Employee) GetPaymentType() models.PayType {

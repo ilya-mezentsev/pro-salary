@@ -11,4 +11,6 @@ type Employee struct {
 	RateType    RateType  `db:"rate_type"`
 	Rate        Rate      `db:"rate"`
 	LastPayDate time.Time `db:"last_pay_date"`
+	WorkedHours int       `db:"worked_hours"`
+	UnpaidHours int       `db:"unpaid_hours"`
 }

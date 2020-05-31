@@ -9,7 +9,6 @@ import (
 func PerformPayments(
 	employeesFactory interfaces.EmployeesFactory,
 	paymentResultFactory interfaces.PaymentResultFactory,
-	workedHours int,
 	today time.Time,
 ) error {
 	employees, err := employeesFactory.GetAll()
@@ -28,7 +27,6 @@ func PerformPayments(
 			go performPayment(
 				employee,
 				paymentResultFactory,
-				workedHours,
 				processing,
 			)
 		}
@@ -51,10 +49,9 @@ func PerformPayments(
 func performPayment(
 	employee interfaces.Employee,
 	paymentResultFactory interfaces.PaymentResultFactory,
-	workedHours int,
 	processing types.PaymentProcessing,
 ) {
-	payment := employee.CalculatePayment(workedHours)
+	payment := employee.CalculatePayment()
 	paymentResult, err := paymentResultFactory.GetPaymentResult(employee.GetPaymentType())
 	if err != nil {
 		processing.Error <- err

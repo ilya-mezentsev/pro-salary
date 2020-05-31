@@ -22,8 +22,11 @@ func (e Employee) IsPayDay(today time.Time) bool {
 	return e.salary.isPayDay(today)
 }
 
-func (e Employee) CalculatePayment(_ int) models.Payment {
-	return models.Payment(e.data.Rate)
+func (e Employee) CalculatePayment() models.Payment {
+	return models.Payment{
+		UserId: e.data.Id,
+		Amount: models.PaymentAmount(e.data.Rate),
+	}
 }
 
 func (e Employee) GetPaymentType() models.PayType {
