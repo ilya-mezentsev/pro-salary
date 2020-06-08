@@ -24,8 +24,8 @@ func (e Employee) IsPayDay(today time.Time) bool {
 
 func (e Employee) CalculatePayment() models.Payment {
 	return models.Payment{
-		UserId: e.data.Id,
-		Amount: models.PaymentAmount(e.data.Rate),
+		EmployeeId: e.data.Id,
+		Amount:     models.PaymentAmount(e.data.Rate),
 	}
 }
 

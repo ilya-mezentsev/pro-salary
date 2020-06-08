@@ -11,7 +11,20 @@ type (
 
 type (
 	Payment struct {
-		UserId ID
-		Amount PaymentAmount
+		EmployeeId ID
+		Amount     PaymentAmount
+	}
+
+	Consumption struct {
+		Id         ID `db:"uuid"`
+		EmployeeId ID `db:"employee_uuid"`
+		Amount     PaymentAmount
+	}
+
+	Check struct {
+		EmployeeId   ID
+		Amount       PaymentAmount
+		Consumptions []Consumption
+		Total        PaymentAmount
 	}
 )

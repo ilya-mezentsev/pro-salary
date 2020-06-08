@@ -8,7 +8,7 @@ import (
 
 func PerformPayments(
 	employeesFactory interfaces.EmployeesFactory,
-	paymentResultFactory interfaces.PaymentResultFactory,
+	paymentResultFactory interfaces.PaymentFinalizerConstructor,
 	today time.Time,
 ) error {
 	employees, err := employeesFactory.GetAll()
@@ -17,13 +17,14 @@ func PerformPayments(
 	}
 
 	processedPaymentsCount := 0
-	employeesCount := len(employees)
+	paymentsCount := 0
 	processing := types.PaymentProcessing{
 		Error: make(chan error),
 		Done:  make(chan bool),
 	}
 	for _, employee := range employees {
 		if employee.IsPayDay(today) {
+			paymentsCount++
 			go performPayment(
 				employee,
 				paymentResultFactory,
@@ -39,7 +40,7 @@ func PerformPayments(
 		case err = <-processing.Error:
 			return err
 		default:
-			if processedPaymentsCount >= employeesCount {
+			if processedPaymentsCount >= paymentsCount {
 				return nil
 			}
 		}
@@ -48,17 +49,17 @@ func PerformPayments(
 
 func performPayment(
 	employee interfaces.Employee,
-	paymentResultFactory interfaces.PaymentResultFactory,
+	paymentResultFactory interfaces.PaymentFinalizerConstructor,
 	processing types.PaymentProcessing,
 ) {
 	payment := employee.CalculatePayment()
-	paymentResult, err := paymentResultFactory.GetPaymentResult(employee.GetPaymentType())
+	paymentFinalizer, err := paymentResultFactory.GetPaymentFinalizer(employee.GetPaymentType())
 	if err != nil {
 		processing.Error <- err
 		return
 	}
 
-	err = paymentResult.FinishTransaction(payment)
+	err = paymentFinalizer.Finish(payment)
 	if err != nil {
 		processing.Error <- err
 		return

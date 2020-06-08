@@ -35,8 +35,8 @@ func TestEmployee_CalculatePayment40hours(t *testing.T) {
 
 	utils.AssertEqual(
 		models.Payment{
-			UserId: employeeData.Id,
-			Amount: models.PaymentAmount(employeeData.Rate * models.Rate(employeeData.UnpaidHours)),
+			EmployeeId: employeeData.Id,
+			Amount:     models.PaymentAmount(employeeData.Rate * models.Rate(employeeData.UnpaidHours)),
 		},
 		e.CalculatePayment(),
 		t,
@@ -49,8 +49,8 @@ func TestEmployee_CalculatePayment30hours(t *testing.T) {
 
 	utils.AssertEqual(
 		models.Payment{
-			UserId: employeeData.Id,
-			Amount: models.PaymentAmount(employeeData.Rate * models.Rate(employeeData.UnpaidHours)),
+			EmployeeId: employeeData.Id,
+			Amount:     models.PaymentAmount(employeeData.Rate * models.Rate(employeeData.UnpaidHours)),
 		},
 		e.CalculatePayment(),
 		t,
@@ -63,8 +63,8 @@ func TestEmployee_CalculatePayment50hours(t *testing.T) {
 
 	utils.AssertEqual(
 		models.Payment{
-			UserId: employeeData.Id,
-			Amount: models.PaymentAmount(employeeData.Rate * (40 + 10*1.5)),
+			EmployeeId: employeeData.Id,
+			Amount:     models.PaymentAmount(employeeData.Rate * (40 + 10*1.5)),
 		},
 		e.CalculatePayment(),
 		t,

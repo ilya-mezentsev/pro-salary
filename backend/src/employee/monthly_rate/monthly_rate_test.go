@@ -35,8 +35,8 @@ func TestEmployee_CalculatePayment(t *testing.T) {
 
 	utils.AssertEqual(
 		models.Payment{
-			UserId: employeeData.Id,
-			Amount: models.PaymentAmount(employeeData.Rate),
+			EmployeeId: employeeData.Id,
+			Amount:     models.PaymentAmount(employeeData.Rate),
 		},
 		e.CalculatePayment(),
 		t,

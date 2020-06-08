@@ -10,7 +10,7 @@ type payment struct {
 
 func (p payment) calculate(workedHours int) models.Payment {
 	payment := models.Payment{
-		UserId: p.data.Id,
+		EmployeeId: p.data.Id,
 	}
 
 	if workedHours > weekWorkHours {
