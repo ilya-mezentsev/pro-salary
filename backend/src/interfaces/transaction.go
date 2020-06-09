@@ -4,7 +4,9 @@ import "models"
 
 type (
 	PaymentFinalizerConstructor interface {
-		GetPaymentFinalizer(payType models.PayType) (PaymentFinalizer, error)
+		GetPaymentFinalizer(payType models.PayType) PaymentFinalizer
+		SetCheckProcessor(payType models.PayType, processor CheckProcessor)
+		SetDefaultCheckProcessor(processor CheckProcessor)
 	}
 
 	PaymentFinalizer interface {

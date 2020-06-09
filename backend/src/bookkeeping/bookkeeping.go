@@ -8,7 +8,7 @@ import (
 
 func PerformPayments(
 	employeesFactory interfaces.EmployeesFactory,
-	paymentResultFactory interfaces.PaymentFinalizerConstructor,
+	paymentFinalizerConstructor interfaces.PaymentFinalizerConstructor,
 	today time.Time,
 ) error {
 	employees, err := employeesFactory.GetAll()
@@ -27,7 +27,7 @@ func PerformPayments(
 			paymentsCount++
 			go performPayment(
 				employee,
-				paymentResultFactory,
+				paymentFinalizerConstructor,
 				processing,
 			)
 		}
@@ -49,17 +49,13 @@ func PerformPayments(
 
 func performPayment(
 	employee interfaces.Employee,
-	paymentResultFactory interfaces.PaymentFinalizerConstructor,
+	paymentFinalizerConstructor interfaces.PaymentFinalizerConstructor,
 	processing types.PaymentProcessing,
 ) {
 	payment := employee.CalculatePayment()
-	paymentFinalizer, err := paymentResultFactory.GetPaymentFinalizer(employee.GetPaymentType())
-	if err != nil {
-		processing.Error <- err
-		return
-	}
+	paymentFinalizer := paymentFinalizerConstructor.GetPaymentFinalizer(employee.GetPaymentType())
 
-	err = paymentFinalizer.Finish(payment)
+	err := paymentFinalizer.Finish(payment)
 	if err != nil {
 		processing.Error <- err
 		return

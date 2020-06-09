@@ -55,9 +55,8 @@ const (
 )
 
 const (
-	BadEmployeeId                 models.ID = ""
-	NotFoundEmployeeId            models.ID = "not-found"
-	EmployeeIdWithoutConsumptions models.ID = "no-consumptions"
+	BadEmployeeId      models.ID = ""
+	NotFoundEmployeeId models.ID = "not-found"
 )
 
 var (

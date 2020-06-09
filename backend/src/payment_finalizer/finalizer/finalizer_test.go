@@ -4,13 +4,19 @@ import (
 	"mock"
 	. "mock/payment_finalizer"
 	"models"
-	"payment_finalizer"
 	utils "test_utils"
 	"testing"
 )
 
+type DefaultCheckProcessor struct {
+}
+
+func (p DefaultCheckProcessor) Process(models.Check) error {
+	return nil
+}
+
 var (
-	defaultCheckProcessor      = payment_finalizer.DefaultCheckProcessor{}
+	defaultCheckProcessor      = DefaultCheckProcessor{}
 	paymentFinalizerRepository = RepositoryMock{}
 	finalizer                  = New(
 		paymentFinalizerRepository,
