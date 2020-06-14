@@ -10,6 +10,7 @@ import (
 	"os"
 	utils "test_utils"
 	"testing"
+	"time"
 )
 
 var (
@@ -66,19 +67,24 @@ func TestRepository_AddUnpaidToWorkedHoursSomeError(t *testing.T) {
 func TestRepository_SetUnpaidHoursToZeroSuccess(t *testing.T) {
 	mock.InitTables(db)
 	defer mock.DropTables(db)
+	currentYear, currentMonth, currentDay := time.Now().Date()
 
-	err := repository.SetUnpaidHoursToZero(mock.GetAllEmployees()[0].Id)
+	err := repository.SetUnpaidHoursToZeroAndResetLastPayDate(mock.GetAllEmployees()[0].Id)
 	employee := mock.GetEmployee(db, mock.GetAllEmployees()[0].Id)
 
 	utils.AssertNil(err, t)
 	utils.AssertEqual(0, employee.UnpaidHours, t)
+	year, month, day := employee.LastPayDate.Date()
+	utils.AssertEqual(currentYear, year, t)
+	utils.AssertEqual(currentMonth, month, t)
+	utils.AssertEqual(currentDay, day, t)
 }
 
 func TestRepository_SetUnpaidHoursToZeroNotFoundEmployeeId(t *testing.T) {
 	mock.InitTables(db)
 	defer mock.DropTables(db)
 
-	err := repository.SetUnpaidHoursToZero(mock.NotFoundEmployeeId)
+	err := repository.SetUnpaidHoursToZeroAndResetLastPayDate(mock.NotFoundEmployeeId)
 
 	utils.AssertErrorsEqual(app_internals.EmployeeNotFound, err, t)
 }
@@ -86,7 +92,7 @@ func TestRepository_SetUnpaidHoursToZeroNotFoundEmployeeId(t *testing.T) {
 func TestRepository_SetUnpaidHoursToZeroSomeError(t *testing.T) {
 	mock.DropTables(db)
 
-	err := repository.SetUnpaidHoursToZero(mock.GetAllEmployees()[0].Id)
+	err := repository.SetUnpaidHoursToZeroAndResetLastPayDate(mock.GetAllEmployees()[0].Id)
 
 	utils.AssertNotNil(err, t)
 }

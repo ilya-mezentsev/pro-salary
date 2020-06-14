@@ -7,7 +7,9 @@ import (
 )
 
 const (
-	selectEmployeesQuery = `SELECT uuid, name, pay_type, rate_type, rate, last_pay_date FROM employees`
+	selectEmployeesQuery = `
+	SELECT uuid, name, pay_type, rate_type, rate, last_pay_date, worked_hours, unpaid_hours
+	FROM employees`
 )
 
 type Repository struct {

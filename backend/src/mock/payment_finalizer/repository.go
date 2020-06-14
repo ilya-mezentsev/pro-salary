@@ -13,7 +13,7 @@ func (r RepositoryMock) AddUnpaidToWorkedHours(employeeId models.ID) error {
 	return getErrorByEmployeeId(employeeId)
 }
 
-func (r RepositoryMock) SetUnpaidHoursToZero(employeeId models.ID) error {
+func (r RepositoryMock) SetUnpaidHoursToZeroAndResetLastPayDate(employeeId models.ID) error {
 	return getErrorByEmployeeId(employeeId)
 }
 

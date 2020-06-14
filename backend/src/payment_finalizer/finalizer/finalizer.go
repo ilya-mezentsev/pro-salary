@@ -23,7 +23,7 @@ func (f Finalizer) Finish(payment models.Payment) error {
 		return err
 	}
 
-	err = f.repository.SetUnpaidHoursToZero(payment.EmployeeId)
+	err = f.repository.SetUnpaidHoursToZeroAndResetLastPayDate(payment.EmployeeId)
 	if err != nil {
 		return err
 	}

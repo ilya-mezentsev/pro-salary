@@ -9,6 +9,7 @@ import (
 	"interfaces"
 	"mock"
 	"mock/bookkeeping"
+	"models"
 	"os"
 	"payment_finalizer"
 	paymentFinalizerRepository "payment_finalizer/repositories"
@@ -43,6 +44,15 @@ func init() {
 	paymentFinalizerConstructor = payment_finalizer.New(paymentFinalizerRepository.New(db))
 }
 
+func getConsumptionsAmount(consumptions []models.Consumption) models.PaymentAmount {
+	var sum models.PaymentAmount
+	for _, consumption := range consumptions {
+		sum += consumption.Amount
+	}
+
+	return sum
+}
+
 func TestPerformPaymentsSimpleCallSuccess(t *testing.T) {
 	mock.InitTables(db)
 	defer mock.DropTables(db)
@@ -60,6 +70,42 @@ func TestPerformPaymentsLookupChecks(t *testing.T) {
 	mock.InitTables(db)
 	defer mock.DropTables(db)
 	paymentFinalizerConstructor.SetDefaultCheckProcessor(&savingChecksProcessor)
+	now := time.Now()
+	currentYear, currentMonth, currentDay := now.Date()
+
+	err := PerformPayments(
+		employeesFactory,
+		paymentFinalizerConstructor,
+		now,
+	)
+
+	utils.AssertNil(err, t)
+	for _, check := range savingChecksProcessor.GetSavedChecks() {
+		utils.AssertEqual(check.Total, check.Amount-getConsumptionsAmount(check.Consumptions), t)
+
+		utils.AssertEqual(0, len(mock.GetEmployeeConsumptions(db, check.EmployeeId)), t)
+		year, month, day := mock.GetEmployee(db, check.EmployeeId).LastPayDate.Date()
+		utils.AssertEqual(currentYear, year, t)
+		utils.AssertEqual(currentMonth, month, t)
+		utils.AssertEqual(currentDay, day, t)
+	}
+}
+
+func TestPerformPaymentsBadPaymentFinalizer(t *testing.T) {
+	mock.InitTables(db)
+	defer mock.DropTables(db)
+
+	err := PerformPayments(
+		employeesFactory,
+		bookkeeping.BadPaymentFinalizerConstructor{},
+		time.Now(),
+	)
+
+	utils.AssertNotNil(err, t)
+}
+
+func TestPerformPaymentsSomeError(t *testing.T) {
+	mock.DropTables(db)
 
 	err := PerformPayments(
 		employeesFactory,
@@ -67,5 +113,5 @@ func TestPerformPaymentsLookupChecks(t *testing.T) {
 		time.Now(),
 	)
 
-	utils.AssertNil(err, t)
+	utils.AssertNotNil(err, t)
 }

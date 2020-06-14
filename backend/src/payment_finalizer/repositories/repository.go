@@ -13,9 +13,9 @@ const (
 	SET worked_hours = worked_hours + unpaid_hours
 	WHERE uuid = $1`
 
-	setUnpaidHoursToZeroQuery = `
+	setUnpaidHoursToZeroAndResetLastPayDateQuery = `
 	UPDATE employees
-	SET unpaid_hours = 0
+	SET unpaid_hours = 0, last_pay_date = NOW() AT TIME ZONE 'utc'
 	WHERE uuid = $1`
 
 	getEmployeeConsumptionsQuery = `
@@ -49,8 +49,8 @@ func (r Repository) AddUnpaidToWorkedHours(employeeId models.ID) error {
 	return nil
 }
 
-func (r Repository) SetUnpaidHoursToZero(employeeId models.ID) error {
-	res, err := r.db.Exec(setUnpaidHoursToZeroQuery, employeeId)
+func (r Repository) SetUnpaidHoursToZeroAndResetLastPayDate(employeeId models.ID) error {
+	res, err := r.db.Exec(setUnpaidHoursToZeroAndResetLastPayDateQuery, employeeId)
 	if err != nil {
 		return err
 	}

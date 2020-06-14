@@ -19,7 +19,7 @@ type (
 
 	PaymentFinalizerRepository interface {
 		AddUnpaidToWorkedHours(employeeId models.ID) error
-		SetUnpaidHoursToZero(employeeId models.ID) error
+		SetUnpaidHoursToZeroAndResetLastPayDate(employeeId models.ID) error
 		GetEmployeeConsumptions(employeeId models.ID) ([]models.Consumption, error)
 		MakeConsumptionsCompleted(employeeId models.ID) error
 	}
